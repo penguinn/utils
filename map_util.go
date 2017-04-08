@@ -1,10 +1,8 @@
-package global_util
+package utils
 
 import "sync"
 import "errors"
 import "fmt"
-
-//"reflect"
 
 type MapWithRWMutex struct {
 	mapInst map[interface{}]interface{}

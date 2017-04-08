@@ -1,4 +1,4 @@
-package global_util
+package utils
 
 import (
 	"sync"
