@@ -50,7 +50,9 @@ func NewAsyncTaskPool(threads int, taskChanSize int) *AsyncTaskPool {
 	return p
 }
 
+//注意，添加的异步任务不能抛异常
 func (p *AsyncTaskPool) Do(handler interface{}, params ...interface{}) {
+	//这里创建一个task放到channel
 	t := NewAsyncTask(handler, params...)
 	p.taskChan <- t
 }
