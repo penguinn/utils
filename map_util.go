@@ -15,6 +15,7 @@ func NewMapWithRWMutex() *MapWithRWMutex {
 	}
 }
 
+//如果key已存在，就不会设置
 func (p *MapWithRWMutex) Add(key interface{}, value interface{}) (err error) {
 	p.Lock()
 	defer p.Unlock()
@@ -25,6 +26,13 @@ func (p *MapWithRWMutex) Add(key interface{}, value interface{}) (err error) {
 		p.mapInst[key] = value
 	}
 	return
+}
+
+//key不存在就新增，key存在就覆盖
+func (p *MapWithRWMutex) Set(key interface{}, value interface{}) {
+	p.Lock()
+	defer p.Unlock()
+	p.mapInst[key] = value
 }
 
 func (p *MapWithRWMutex) Get(key interface{}) (value interface{}, ok bool) {
@@ -51,21 +59,14 @@ func (p *MapWithRWMutex) PopOne() (value interface{}, ok bool) {
 }
 
 func (p *MapWithRWMutex) Remove(key interface{}) (err error) {
-	// fmt.Println("call Remove begin")
 	p.Lock()
-	// fmt.Println("call Remove middle1")
 	defer p.Unlock()
-	// fmt.Println("call Remove middle2")
 	_, ok := p.mapInst[key] //此时不能调用p.Has函数，否则就锁重入了，会卡住
 	if ok {
-		// fmt.Println("call Remove middle3")
 		delete(p.mapInst, key)
-		// fmt.Println("call Remove middle3.1")
 	} else {
-		// fmt.Println("call Remove middle4")
 		err = errors.New(fmt.Sprint("Do not have:", key))
 	}
-	//fmt.Println("call Remove end")
 	return
 }
 
