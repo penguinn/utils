@@ -1,10 +1,9 @@
-package utils
+package async
 
 import (
+	"log"
 	"reflect"
 	"runtime/debug"
-
-	log "github.com/cihub/seelog"
 )
 
 type AsyncTask struct {
@@ -35,7 +34,7 @@ func NewAsyncTask(handler interface{}, params ...interface{}) *AsyncTask {
 func (p *AsyncTask) Do() []reflect.Value {
 	defer func() { //增加异步捕获
 		if errErr := recover(); errErr != nil {
-			log.Error("defer err:", errErr, "\nsatck:", string(debug.Stack()))
+			log.Println("defer err:", errErr, "\nsatck:", string(debug.Stack()))
 		}
 		return
 	}()
